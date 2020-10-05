@@ -6,8 +6,8 @@ const Sequelize = require("sequelize");
 const env = process.env.NODE_ENV || "development";
 const config = require(path.join(__dirname, '..', 'config', 'config.json'))[env];
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
-const db = {};
 
+const db = {};
 
 fs
     .readdirSync(__dirname)
@@ -16,6 +16,7 @@ fs
     })
     .forEach(function(file) {
         const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes)
+        console.log(model.name);
         db[model.name] = model;
     });
 
@@ -24,7 +25,6 @@ Object.keys(db).forEach(function(modelName) {
         db[modelName].associate(db);
     }
 });
-
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

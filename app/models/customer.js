@@ -1,6 +1,6 @@
 module.exports = function (sequelize, Sequelize) {
 
-    const User = sequelize.define('user', {
+    const Customer = sequelize.define('customer', {
 
         id: {
             autoIncrement: true,
@@ -25,33 +25,12 @@ module.exports = function (sequelize, Sequelize) {
 
         email: {
             type: Sequelize.STRING,
-            validate: {
-                isEmail: true
-            }
-        },
-
-        password: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
-
-        sex: {
-            type: Sequelize.STRING,
-            notEmpty: true
-        },
-
-        last_login: {
-            type: Sequelize.DATE
-        },
-
-        status: {
-            type: Sequelize.ENUM('active', 'inactive'),
-            defaultValue: 'active'
+            // validate: {
+            //     isEmail: true
+            // }
         }
-
-
     });
 
-    return User;
+    return Customer;
 
 }

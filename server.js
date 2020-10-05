@@ -1,66 +1,48 @@
 const path = require('path');
-
 const express = require('express'); //was var instead of const
+const cookieParser = require('cookie-parser');
 const app = express();
 const passport = require('passport');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const env = require('dotenv').config();
-const exphbs = require('express-handlebars')
+const models = require('./app/models');
+const custRouter = require('./app/routes/customer')
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-
-
+app.use(cookieParser());
 app.use(session({secret: 'keyboard cat', resave: true, saveUninitialized: true})); // session secret
 app.use(passport.initialize());
 app.use(passport.session());
-
-
-//Models
-const models = require("./app/models");
-
-//Routes
-authRoute = require('./app/routes/auth.js')(app, passport);
-
 //load passport strategies
-require('./app/config/passport/passport.js')(passport, models.user);
+
+app.use(function (req, res, next) {
+        res.header("Access-Control-Allow-Origin", 'http://localhost:3000'); //
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        next();
+});
+
+authRoute = require('./app/routes/auth.js')(app);
+app.use('/customer', custRouter);
+
+
+
 
 //Sync Database
 models.sequelize.sync().then(function () {
-
-    console.log('Nice! Database looks fine')
-
+    //console.log('Nice! Database looks fine')
 }).catch(function (err) {
-
     console.log(err, "Something went wrong with the Database Update!")
-
 });
 
-//For Handlebars
-app.engine('.hbs', exphbs({
-    defaultLayout: 'layout',
-    extname: '.hbs',
-    layoutsDir: path.join(__dirname),
-    partialsDir: path.join(__dirname)
-}))
-
-app.set('view engine', '.hbs')
-app.set('views', path.join(__dirname))
-
-
-app.get('/', function (req, res) {
-
-    res.render('app/views/home');
-
-});
 
 
 app.listen(4000, function (err) {
 
-    if (!err)
-        console.log("Site is live");
-    else console.log(err)
+    if (err)
+        //console.log("Site is live");
+        console.log(err)
 
 });
 

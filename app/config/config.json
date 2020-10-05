@@ -1,14 +1,16 @@
 {
   "development": {
-    "dialect": "sqlite",
-    "storage": "./users-data.sqlite3"
+    "dialect": "sqlite"
   },
   "test": {
     "dialect": "sqlite",
     "storage": ":memory"
   },
   "production": {
-    "dialect": "sqlite",
-    "storage": "./users-data.sqlite3"
-  }
+    "dialect": "sqlite"
+  },
+  "database": {
+        "user": "./users-data.sqlite3",
+        "customer": "./users-data.sqlite3"
+    }
 }

@@ -1,39 +1,21 @@
-const authController = require('../controllers/authcontroller.js');
+const passport = require('../config/passport/passport');
 
-module.exports = function (app, passport) {
+module.exports = function (app) {
+    app.get('/logout', (req, res) => {
+        req.logout();
+        res.send(200);
+})
 
-    app.get('/signup', authController.signup);
-    app.get('/signin', authController.signin);
-    app.get('/page', isLoggedIn, authController.personalPage);//:id
-    app.get('/page/change', authController.change);//:id
-    app.get('/users', authController.users);//redirects to sign in
-
-    app.get('/logout', authController.logout);
-
-
-    app.post('/signup', passport.authenticate('local-signup', {
-            successRedirect: '/page',//?
-
-            failureRedirect: '/signup'
+    app.post('/user', passport.authenticate('local-signup'), (req, res) => { //todo: signup
+            console.log('server');
+            res.sendStatus(200)
         }
-        )
     );
 
-    app.post('/signin', passport.authenticate('local-signin', {
-            successRedirect: '/page',//???
-
-            failureRedirect: '/signin'
+    app.post('/signin', passport.authenticate('local-signin'), (req, res) => {
+            console.log('server 1', req.user);
+            res.sendStatus(200);
         }
-    ));
-
-    function isLoggedIn(req, res, next) {
-
-        if (req.isAuthenticated())
-
-            return next();
-
-        res.redirect('/signin');
-    }
-
+    );
 
 }

@@ -1,57 +1,34 @@
-module.exports = function (sequelize, Sequelize) {
+const bCrypt = require('bcrypt-nodejs');
+const _ = require('lodash');
 
-    const User = sequelize.define('user', {
+const hash = function (password) {
+  return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
+};
 
-        id: {
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
-        },
-
-        firstname: {
-            type: Sequelize.STRING,
-            notEmpty: true
-        },
-
-        lastname: {
-            type: Sequelize.STRING,
-            notEmpty: true
-        },
-
-
-        age: {
-            type: Sequelize.INTEGER
-        },
-
-        email: {
-            type: Sequelize.STRING,
-            validate: {
-                isEmail: true
-            }
-        },
-
-        password: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
-
-        sex: {
-            type: Sequelize.STRING,
-            notEmpty: true
-        },
-
-        last_login: {
-            type: Sequelize.DATE
-        },
-
-        status: {
-            type: Sequelize.ENUM('active', 'inactive'),
-            defaultValue: 'active'
-        }
-
-
-    });
-
-    return User;
-
-}
+module.exports = (sequelize, Sequelize) => sequelize.define('User', {
+  id: {
+    autoIncrement: true,
+    primaryKey: true,
+    type: Sequelize.INTEGER,
+  },
+  email: {
+    // todo: add unique
+    type: Sequelize.STRING,
+    validate: {
+      isEmail: true,
+    },
+  },
+  password: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    set(value) {
+      this.setDataValue('password', hash(value));
+    },
+  },
+}, {
+  instanceMethods: {
+    toPublicJSON() {
+      return _.omit(this.get(), ['password', 'createdAt', 'updatedAt']);
+    },
+  },
+});

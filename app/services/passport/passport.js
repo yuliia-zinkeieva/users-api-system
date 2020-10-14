@@ -3,6 +3,8 @@ const localStrategy = require('./strategies/local');
 const passport = require('passport');
 const { User } = require('../../models');
 
+//todo: show error messages
+
 // this function is called when we encrypt user data to cookie (we use only Id)
 passport.serializeUser(function (user, done) {
   done(null, user.id);

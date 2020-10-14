@@ -27,6 +27,7 @@ const local = new LocalStrategy({
           message: 'Incorrect password.',
         });
       }
+      console.log('passport', user.toPublicJSON())
 
       return done(null, user.toPublicJSON());
     }).catch(function (err) {

@@ -12,7 +12,7 @@ module.exports = (sequelize, Sequelize) => sequelize.define('User', {
     type: Sequelize.INTEGER,
   },
   email: {
-    // todo: add unique
+    unique: true,
     type: Sequelize.STRING,
     validate: {
       isEmail: true,

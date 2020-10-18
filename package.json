@@ -24,6 +24,7 @@
     "sqlite3": "^5.0.0"
   },
   "devDependencies": {
+    "joi": "^17.2.1",
     "nodemon": "^2.0.4"
   }
 }

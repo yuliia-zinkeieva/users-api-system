@@ -1,5 +1,10 @@
 module.exports = function (sequelize, Sequelize) {
     const Customer = sequelize.define('Customer', {
+        id: {
+            autoIncrement: true,
+            primaryKey: true,
+            type: Sequelize.INTEGER,
+        },
         firstname: {
             type: Sequelize.STRING,
             notEmpty: true,
@@ -7,7 +12,7 @@ module.exports = function (sequelize, Sequelize) {
 
         email: {
             type: Sequelize.STRING,
-            primaryKey: true,
+            unique: true,
         },
     });
 

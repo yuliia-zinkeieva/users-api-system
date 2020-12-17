@@ -14,6 +14,10 @@ module.exports = function (sequelize, Sequelize) {
             type: Sequelize.STRING,
             unique: true,
         },
+        image_id: {
+            type: Sequelize.STRING,
+            unique: true,
+        }
     });
 
     return Customer;

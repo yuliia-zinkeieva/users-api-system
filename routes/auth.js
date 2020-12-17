@@ -6,6 +6,8 @@ const {isAuthorized} = require('../app/services/passport/isAuthorized');
 const userSchema = require('../app/services/joi/userSchema');
 const validate = require('../app/services/joi/validate-middleware');
 const PassportError = require('../app/services/errors/PassportError');
+// const session = require('express-session');
+
 
 router.post('/sign-up', validate(userSchema, 'body'), (req, res, next) => {
     const {email, password} = req.body;
@@ -14,6 +16,9 @@ router.post('/sign-up', validate(userSchema, 'body'), (req, res, next) => {
             if (err) {
                 return next(err);
             }
+            req.session.key = req.body.email;
+            console.log('redis', req.body.email);
+
             res.sendStatus(200);
         });
     })
@@ -35,6 +40,8 @@ router.post('/sign-in', function (req, res, next) {
             if (err) {
                 return next(err);
             }
+            req.session.key = req.body.email;
+            console.log('redis', req.body.email);
             res.sendStatus(200);
         });
     })(req, res, next);
@@ -42,9 +49,18 @@ router.post('/sign-in', function (req, res, next) {
 
 // cookie will be cleaned-up
 router.get('/sign-out', (req, res) => {
-    req.logout();
-    res.end();
-});
+        // req.logout();
+        // res.end();
+        if (req.session.key) {
+            req.session.destroy(function () {
+                // res.redirect('/');
+                res.end();
+            });
+        } else {
+
+        }
+    }
+);
 
 // check cookies and verify sessionId
 router.get('/me', isAuthorized, (req, res) => {
